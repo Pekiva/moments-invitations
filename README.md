@@ -1,37 +1,55 @@
 # Moments Invitations
 
-Statische Einladungs-Website für Hochzeiten und besondere Anlässe. Reines HTML/CSS/JS, kein Build-Prozess nötig.
+Einladungs-Website für Hochzeiten und besondere Anlässe. Statisches HTML/CSS/JS-Frontend mit einem kleinen Node/Express-Server für die Gäste-Fotogalerie (Upload + Anzeige über Google Drive).
 
 Aufbau angelehnt an klassische Einladungs-Seiten wie [smartpozivnice.com](https://smartpozivnice.com): durchgehendes Foto im Hintergrund, Hero mit Namen in Schreibschrift, persönliche Nachricht, Event-Details mit Kartenlink, Live-Countdown, Musik-Player, Foto-Galerie mit Lightbox und RSVP-Formular mit Anmeldefrist.
 
 ## Struktur
 
-- `index.html` — Hero, persönliche Nachricht, Location, Ablauf, Countdown, Musik-Player, Galerie, RSVP
-- `css/style.css` — Styling (durchgehendes Hintergrundfoto, Karten-Layout, Dark-Mode-fähige Farben)
-- `js/script.js` — Countdown, RSVP-Anmeldefrist, Musik-Player-Steuerung, Galerie-Lightbox
-- `assets/` — Ablage für Hintergrundfoto, Galerie-Bilder und Musik (siehe unten)
+- `public/index.html` — Hero, persönliche Nachricht, Location, Ablauf, Countdown, Musik-Player, Galerie, RSVP
+- `public/css/style.css` — Styling (durchgehendes Hintergrundfoto, Karten-Layout, Dark-Mode-fähige Farben)
+- `public/js/script.js` — Countdown, RSVP-Anmeldefrist, Musik-Player-Steuerung, Galerie laden/hochladen, Lightbox
+- `public/assets/` — Ablage für Hintergrundfoto und Musik (siehe unten)
+- `server.js` — Express-Server: liefert `public/` aus und stellt `/api/photos` (GET/POST) für die Galerie bereit, angebunden an Google Drive. Nur `public/` ist öffentlich erreichbar — `server.js`, `.env` etc. bleiben unzugänglich.
+
+## Gäste-Fotogalerie (Google Drive)
+
+Gäste können unter "Momente" Fotos hochladen; alle Fotos landen in einem Google-Drive-Ordner und werden von dort für alle Besucher angezeigt (Drive dient gleichzeitig als Speicher und als Foto-Liste — keine eigene Datenbank nötig).
+
+### Einmalige Einrichtung
+
+1. **Google Drive API aktivieren**: [console.cloud.google.com](https://console.cloud.google.com) → Projekt wählen → APIs & Dienste → Bibliothek → "Google Drive API" → Aktivieren
+2. **OAuth-Zustimmungsbildschirm**: APIs & Dienste → OAuth-Zustimmungsbildschirm → User-Typ "Extern", App-Name + Kontakt-E-Mail eintragen, speichern → danach unbedingt auf **"App veröffentlichen"** klicken (sonst laufen Zugangs-Token nach 7 Tagen ab)
+3. **OAuth-Client erstellen**: APIs & Dienste → Anmeldedaten → Anmeldedaten erstellen → OAuth-Client-ID → Typ "Webanwendung" → Redirect-URI `https://developers.google.com/oauthplayground` → Client-ID & Client-Secret notieren
+4. **Refresh-Token holen**: [developers.google.com/oauthplayground](https://developers.google.com/oauthplayground) → Zahnrad → "Use your own OAuth credentials" mit Client-ID/Secret → Scope `https://www.googleapis.com/auth/drive.file` eintragen → Authorize APIs → einloggen → "Exchange authorization code for tokens" → Refresh-Token kopieren
+5. **Drive-Ordner anlegen**: Ordner in Google Drive erstellen, ID aus der URL kopieren (`drive.google.com/drive/folders/<ID>`)
+6. **Umgebungsvariablen setzen**: lokal in `.env` (siehe `.env.example`), auf Railway unter Service → Variables:
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
+   - `GOOGLE_REFRESH_TOKEN`
+   - `GOOGLE_DRIVE_FOLDER_ID`
+
+Ohne diese Variablen liefert `/api/photos` einen Hinweis "Google Drive ist noch nicht konfiguriert" statt eines Fehlers — die restliche Seite funktioniert trotzdem normal.
 
 ## Lokal ansehen
 
-Einfach `index.html` im Browser öffnen, oder mit einem lokalen Server:
-
 ```bash
-python3 -m http.server 8000
+npm install
+npm start
 ```
 
-Danach `http://localhost:8000` öffnen.
+Danach `http://localhost:3000` öffnen. Für die Galerie-Funktion vorher `.env` mit den vier Google-Werten anlegen (siehe oben).
 
 ## Anpassen
 
-Namen, Datum, Location und Ablauf direkt in `index.html` anpassen. Das Hochzeitsdatum für den Countdown steht in `js/script.js` (`weddingDate`).
+Namen, Datum, Location und Ablauf direkt in `index.html` anpassen. Das Hochzeitsdatum für den Countdown und die RSVP-Frist stehen in `js/script.js` (`weddingDate`, `rsvpDeadline`).
 
 ## Deployment (Railway)
 
-Das Repo enthält ein `package.json` mit dem `serve`-Paket, damit Railway (Nixpacks) die Seite als Node-Projekt erkennt und startet:
-
 1. Auf [railway.com/new](https://railway.com/new) → "Deploy from GitHub repo"
 2. Repo `Pekiva/moments-invitations` auswählen
-3. Railway erkennt `package.json`, installiert Dependencies und startet `npm start` automatisch — keine weitere Konfiguration nötig
+3. Railway erkennt `package.json`, installiert Dependencies und startet `npm start` (→ `node server.js`) automatisch
+4. Unter Service → Variables die vier `GOOGLE_*`-Werte eintragen (siehe oben)
 
 ## Assets ergänzen
 
@@ -39,9 +57,8 @@ Diese Dateien fehlen noch und sollten vor dem Live-Gang ergänzt werden:
 
 - `assets/hero-bg.jpg` — Hintergrundfoto, läuft durch die ganze Seite (ohne Datei erscheint ein brauner Verlauf als Platzhalter)
 - `assets/audio/track-1.mp3`, `assets/audio/track-2.mp3` — Songs für den Musik-Player
-- Echte Galerie-Fotos anstelle der `gallery-placeholder`-Kacheln in `index.html`
 
 ## Offene Punkte
 
 - Das RSVP-Formular zeigt aktuell nur eine clientseitige Bestätigung an und sendet keine Daten. Für echte Zusagen muss noch ein Backend/Formular-Service (z.B. Formspree, eigene API) angebunden werden.
-- Die Galerie-Lightbox zeigt aktuell nur einen Platzhalter, sobald ein Foto angeklickt wird — sie muss noch mit echten Bildern befüllt werden.
+- Der Foto-Upload hat keine Login-Schranke — jeder mit dem Link kann Fotos hochladen (max. 10 MB, nur Bilder, kein Löschen durch Gäste möglich). Für mehr Kontrolle könnte man z.B. eine einfache Zugangs-PIN ergänzen.

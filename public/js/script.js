@@ -101,14 +101,16 @@
   var lightbox = document.getElementById('lightbox');
   var lightboxImage = document.getElementById('lightbox-image');
   var lightboxClose = document.getElementById('lightbox-close');
-  var galleryButtons = document.querySelectorAll('#gallery-grid .gallery-placeholder');
+  var galleryGrid = document.getElementById('gallery-grid');
+  var galleryStatus = document.getElementById('gallery-status');
+  var photoUpload = document.getElementById('photo-upload');
 
-  galleryButtons.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      if (!lightbox) return;
-      lightbox.hidden = false;
-    });
-  });
+  function openLightbox(fullUrl, name) {
+    if (!lightbox || !lightboxImage) return;
+    lightboxImage.src = fullUrl;
+    lightboxImage.alt = name || '';
+    lightbox.hidden = false;
+  }
 
   if (lightboxClose) {
     lightboxClose.addEventListener('click', function () {
@@ -119,6 +121,85 @@
   if (lightbox) {
     lightbox.addEventListener('click', function (event) {
       if (event.target === lightbox) lightbox.hidden = true;
+    });
+  }
+
+  function renderGallery(photos) {
+    if (!galleryGrid) return;
+    galleryGrid.innerHTML = '';
+
+    if (!photos || photos.length === 0) {
+      var empty = document.createElement('p');
+      empty.className = 'gallery-empty';
+      empty.textContent = 'Noch keine Fotos — seid die Ersten!';
+      galleryGrid.appendChild(empty);
+      return;
+    }
+
+    photos.forEach(function (photo) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'gallery-thumb';
+      btn.setAttribute('aria-label', 'Foto vergrössern');
+
+      var img = document.createElement('img');
+      img.src = photo.thumbUrl;
+      img.alt = '';
+      img.loading = 'lazy';
+      btn.appendChild(img);
+
+      btn.addEventListener('click', function () {
+        openLightbox(photo.fullUrl, photo.name);
+      });
+
+      galleryGrid.appendChild(btn);
+    });
+  }
+
+  function loadGallery() {
+    if (!galleryGrid) return;
+    fetch('/api/photos')
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data.error) {
+          galleryGrid.innerHTML = '<p class="gallery-empty">' + data.error + '</p>';
+          return;
+        }
+        renderGallery(data.photos);
+      })
+      .catch(function () {
+        galleryGrid.innerHTML = '<p class="gallery-empty">Galerie konnte nicht geladen werden.</p>';
+      });
+  }
+
+  loadGallery();
+
+  if (photoUpload) {
+    photoUpload.addEventListener('change', function () {
+      var files = photoUpload.files;
+      if (!files || files.length === 0) return;
+
+      var formData = new FormData();
+      for (var i = 0; i < files.length; i++) {
+        formData.append('photos', files[i]);
+      }
+
+      if (galleryStatus) galleryStatus.textContent = 'Lädt hoch …';
+
+      fetch('/api/photos', { method: 'POST', body: formData })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (data.error) {
+            if (galleryStatus) galleryStatus.textContent = data.error;
+            return;
+          }
+          if (galleryStatus) galleryStatus.textContent = 'Danke fürs Teilen!';
+          photoUpload.value = '';
+          loadGallery();
+        })
+        .catch(function () {
+          if (galleryStatus) galleryStatus.textContent = 'Upload fehlgeschlagen. Bitte erneut versuchen.';
+        });
     });
   }
 })();

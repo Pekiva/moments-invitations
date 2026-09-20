@@ -115,17 +115,20 @@
 
   <section class="card" id="gallery">
     <h2>Momente</h2>
+    <p class="gallery-intro">Teilt eure schönsten Momente vom Fest mit uns!</p>
+    <div class="gallery-upload">
+      <label for="photo-upload" class="btn btn-outline">Fotos hinzufügen</label>
+      <input type="file" id="photo-upload" accept="image/*" multiple hidden>
+      <p class="gallery-status" id="gallery-status" role="status"></p>
+    </div>
     <div class="gallery-grid" id="gallery-grid">
-      <button type="button" class="gallery-placeholder" data-index="0" aria-label="Foto 1 vergrössern"></button>
-      <button type="button" class="gallery-placeholder" data-index="1" aria-label="Foto 2 vergrössern"></button>
-      <button type="button" class="gallery-placeholder" data-index="2" aria-label="Foto 3 vergrössern"></button>
-      <button type="button" class="gallery-placeholder" data-index="3" aria-label="Foto 4 vergrössern"></button>
+      <p class="gallery-empty" id="gallery-empty">Lade Galerie…</p>
     </div>
   </section>
 
   <div class="lightbox" id="lightbox" hidden>
     <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Schliessen">✕</button>
-    <div class="lightbox-image" id="lightbox-image"></div>
+    <img class="lightbox-image" id="lightbox-image" alt="">
   </div>
 
   <section class="card" id="rsvp">
