@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moments Invitations — Digitale Einladungen</title>
+  <meta name="description" content="Elegante digitale Einladung für Hochzeiten und besondere Anlässe.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="hero" id="top">
+    <div class="hero-content">
+      <p class="eyebrow">Wir heiraten</p>
+      <h1 class="names">Anna <span class="amp">&amp;</span> Marco</h1>
+      <p class="date">14. Juni 2027 · Zürich</p>
+      <a href="#rsvp" class="btn">Jetzt zusagen</a>
+    </div>
+  </header>
+
+  <nav class="site-nav">
+    <a href="#details">Ablauf</a>
+    <a href="#location">Location</a>
+    <a href="#gallery">Momente</a>
+    <a href="#rsvp">RSVP</a>
+  </nav>
+
+  <section class="countdown" aria-label="Countdown bis zur Hochzeit">
+    <div class="countdown-grid" id="countdown">
+      <div class="countdown-item"><span class="num" id="cd-days">00</span><span class="label">Tage</span></div>
+      <div class="countdown-item"><span class="num" id="cd-hours">00</span><span class="label">Stunden</span></div>
+      <div class="countdown-item"><span class="num" id="cd-minutes">00</span><span class="label">Minuten</span></div>
+      <div class="countdown-item"><span class="num" id="cd-seconds">00</span><span class="label">Sekunden</span></div>
+    </div>
+  </section>
+
+  <section class="section" id="details">
+    <h2>Der Ablauf</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <span class="time">14:00</span>
+        <div>
+          <h3>Trauung</h3>
+          <p>Kirche St. Peter, Zürich</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="time">16:00</span>
+        <div>
+          <h3>Apéro</h3>
+          <p>Garten der Villa Rosenau</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <span class="time">19:00</span>
+        <div>
+          <h3>Dinner &amp; Feier</h3>
+          <p>Festsaal, Villa Rosenau</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" id="location">
+    <h2>Location</h2>
+    <p class="location-address">Villa Rosenau · Rosenweg 12 · 8032 Zürich</p>
+    <div class="map-embed">
+      <iframe
+        title="Kartenansicht der Location"
+        loading="lazy"
+        src="https://www.google.com/maps?q=Z%C3%BCrich&output=embed">
+      </iframe>
+    </div>
+  </section>
+
+  <section class="section" id="gallery">
+    <h2>Momente</h2>
+    <div class="gallery-grid">
+      <div class="gallery-placeholder"></div>
+      <div class="gallery-placeholder"></div>
+      <div class="gallery-placeholder"></div>
+      <div class="gallery-placeholder"></div>
+    </div>
+  </section>
+
+  <section class="section alt" id="rsvp">
+    <h2>Wir freuen uns auf euch</h2>
+    <p class="rsvp-intro">Bitte gebt uns bis zum 1. Mai 2027 Bescheid, ob ihr dabei sein könnt.</p>
+    <form class="rsvp-form" id="rsvp-form">
+      <div class="form-row">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-row">
+        <label for="email">E-Mail</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-row">
+        <label for="guests">Anzahl Personen</label>
+        <input type="number" id="guests" name="guests" min="1" max="6" value="1" required>
+      </div>
+      <fieldset class="form-row">
+        <legend>Kommt ihr?</legend>
+        <label class="radio"><input type="radio" name="attending" value="yes" checked> Ja, mit Freude!</label>
+        <label class="radio"><input type="radio" name="attending" value="no"> Leider nicht</label>
+      </fieldset>
+      <div class="form-row">
+        <label for="message">Nachricht (optional)</label>
+        <textarea id="message" name="message" rows="3"></textarea>
+      </div>
+      <button type="submit" class="btn">Zusage senden</button>
+      <p class="form-status" id="form-status" role="status"></p>
+    </form>
+  </section>
+
+  <footer class="site-footer">
+    <p>Mit Liebe gemacht · <a href="#top">nach oben</a></p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
