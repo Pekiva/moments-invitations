@@ -98,81 +98,18 @@
     });
   }
 
-  var lightbox = document.getElementById('lightbox');
-  var lightboxImage = document.getElementById('lightbox-image');
-  var lightboxClose = document.getElementById('lightbox-close');
-  var galleryGrid = document.getElementById('gallery-grid');
   var galleryStatus = document.getElementById('gallery-status');
   var photoUpload = document.getElementById('photo-upload');
+  var galleryLink = document.getElementById('gallery-link');
 
-  function openLightbox(fullUrl, name) {
-    if (!lightbox || !lightboxImage) return;
-    lightboxImage.src = fullUrl;
-    lightboxImage.alt = name || '';
-    lightbox.hidden = false;
-  }
-
-  if (lightboxClose) {
-    lightboxClose.addEventListener('click', function () {
-      lightbox.hidden = true;
-    });
-  }
-
-  if (lightbox) {
-    lightbox.addEventListener('click', function (event) {
-      if (event.target === lightbox) lightbox.hidden = true;
-    });
-  }
-
-  function renderGallery(photos) {
-    if (!galleryGrid) return;
-    galleryGrid.innerHTML = '';
-
-    if (!photos || photos.length === 0) {
-      var empty = document.createElement('p');
-      empty.className = 'gallery-empty';
-      empty.textContent = 'Noch keine Fotos — seid die Ersten!';
-      galleryGrid.appendChild(empty);
-      return;
-    }
-
-    photos.forEach(function (photo) {
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'gallery-thumb';
-      btn.setAttribute('aria-label', 'Foto vergrössern');
-
-      var img = document.createElement('img');
-      img.src = photo.thumbUrl;
-      img.alt = '';
-      img.loading = 'lazy';
-      btn.appendChild(img);
-
-      btn.addEventListener('click', function () {
-        openLightbox(photo.fullUrl, photo.name);
-      });
-
-      galleryGrid.appendChild(btn);
-    });
-  }
-
-  function loadGallery() {
-    if (!galleryGrid) return;
-    fetch('/api/photos')
+  if (galleryLink) {
+    fetch('/api/gallery-link')
       .then(function (res) { return res.json(); })
       .then(function (data) {
-        if (data.error) {
-          galleryGrid.innerHTML = '<p class="gallery-empty">' + data.error + '</p>';
-          return;
-        }
-        renderGallery(data.photos);
+        if (data.url) galleryLink.href = data.url;
       })
-      .catch(function () {
-        galleryGrid.innerHTML = '<p class="gallery-empty">Galerie konnte nicht geladen werden.</p>';
-      });
+      .catch(function () {});
   }
-
-  loadGallery();
 
   if (photoUpload) {
     photoUpload.addEventListener('change', function () {
@@ -195,7 +132,6 @@
           }
           if (galleryStatus) galleryStatus.textContent = 'Danke fürs Teilen!';
           photoUpload.value = '';
-          loadGallery();
         })
         .catch(function () {
           if (galleryStatus) galleryStatus.textContent = 'Upload fehlgeschlagen. Bitte erneut versuchen.';

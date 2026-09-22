@@ -37,33 +37,11 @@ const PUBLIC_DIR = path.join(__dirname, 'public');
 const app = express();
 app.use(express.static(PUBLIC_DIR));
 
-app.get('/api/photos', async (req, res) => {
-  if (!driveConfigured) {
+app.get('/api/gallery-link', (req, res) => {
+  if (!GOOGLE_DRIVE_FOLDER_ID) {
     return res.status(503).json({ error: 'Google Drive ist noch nicht konfiguriert.' });
   }
-
-  try {
-    const drive = getDriveClient();
-    const result = await drive.files.list({
-      q: `'${GOOGLE_DRIVE_FOLDER_ID}' in parents and mimeType contains 'image/' and trashed = false`,
-      fields: 'files(id, name, createdTime)',
-      orderBy: 'createdTime desc',
-      pageSize: 200,
-    });
-
-    const photos = (result.data.files || []).map((file) => ({
-      id: file.id,
-      name: file.name,
-      createdTime: file.createdTime,
-      thumbUrl: `https://drive.google.com/thumbnail?id=${file.id}&sz=w400`,
-      fullUrl: `https://drive.google.com/thumbnail?id=${file.id}&sz=w1600`,
-    }));
-
-    res.json({ photos });
-  } catch (err) {
-    console.error('Fehler beim Laden der Galerie:', err.message, JSON.stringify(err.response?.data || {}));
-    res.status(500).json({ error: 'Galerie konnte nicht geladen werden.' });
-  }
+  res.json({ url: `https://drive.google.com/drive/folders/${GOOGLE_DRIVE_FOLDER_ID}` });
 });
 
 app.post('/api/photos', upload.array('photos', 10), async (req, res) => {

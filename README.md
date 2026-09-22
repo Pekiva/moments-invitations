@@ -8,13 +8,15 @@ Aufbau angelehnt an klassische Einladungs-Seiten wie [smartpozivnice.com](https:
 
 - `public/index.html` — Hero, persönliche Nachricht, Location, Ablauf, Countdown, Musik-Player, Galerie, RSVP
 - `public/css/style.css` — Styling (durchgehendes Hintergrundfoto, Karten-Layout, Dark-Mode-fähige Farben)
-- `public/js/script.js` — Countdown, RSVP-Anmeldefrist, Musik-Player-Steuerung, Galerie laden/hochladen, Lightbox
+- `public/js/script.js` — Countdown, RSVP-Anmeldefrist, Musik-Player-Steuerung, Foto-Upload
 - `public/assets/` — Ablage für Hintergrundfoto und Musik (siehe unten)
-- `server.js` — Express-Server: liefert `public/` aus und stellt `/api/photos` (GET/POST) für die Galerie bereit, angebunden an Google Drive. Nur `public/` ist öffentlich erreichbar — `server.js`, `.env` etc. bleiben unzugänglich.
+- `server.js` — Express-Server: liefert `public/` aus, nimmt Uploads über `/api/photos` (POST) entgegen und liefert über `/api/gallery-link` (GET) den Link zum Drive-Ordner. Nur `public/` ist öffentlich erreichbar — `server.js`, `.env` etc. bleiben unzugänglich.
 
 ## Gäste-Fotogalerie (Google Drive)
 
-Gäste können unter "Momente" Fotos hochladen; alle Fotos landen in einem Google-Drive-Ordner und werden von dort für alle Besucher angezeigt (Drive dient gleichzeitig als Speicher und als Foto-Liste — keine eigene Datenbank nötig).
+Unter "Momente" gibt es zwei Buttons: **"Fotos hinzufügen"** (Upload direkt von der Seite) und **"Galerie ansehen"** (öffnet den Google-Drive-Ordner in einem neuen Tab, wo alle hochgeladenen Fotos liegen). Es gibt keine eingebettete Foto-Anzeige auf der Seite selbst — die Ansicht läuft komplett über Drive.
+
+**Wichtig:** Damit Gäste den Ordner ohne eigenen Google-Login öffnen können, muss der Drive-Ordner auf **"Jeder mit dem Link" → "Betrachter"** freigegeben sein (Rechtsklick auf den Ordner in Drive → Teilen → Allgemeiner Zugriff → "Jeder mit dem Link").
 
 ### Einmalige Einrichtung
 
@@ -29,7 +31,7 @@ Gäste können unter "Momente" Fotos hochladen; alle Fotos landen in einem Googl
    - `GOOGLE_REFRESH_TOKEN`
    - `GOOGLE_DRIVE_FOLDER_ID`
 
-Ohne diese Variablen liefert `/api/photos` einen Hinweis "Google Drive ist noch nicht konfiguriert" statt eines Fehlers — die restliche Seite funktioniert trotzdem normal.
+Ohne diese Variablen liefern `/api/photos` und `/api/gallery-link` einen Hinweis "Google Drive ist noch nicht konfiguriert" statt eines Fehlers — die restliche Seite funktioniert trotzdem normal.
 
 ## Lokal ansehen
 
