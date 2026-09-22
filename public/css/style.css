@@ -235,6 +235,25 @@ a { color: inherit; }
 
 /* Music player */
 .player { position: relative; }
+
+.youtube-frame {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: #000;
+}
+
+.youtube-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 .player-track { margin-bottom: 16px; }
 
 .player-title {
@@ -282,15 +301,6 @@ a { color: inherit; }
   justify-content: space-between;
   font-size: 0.75rem;
   color: var(--color-muted);
-}
-
-.youtube-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
 }
 
 /* Gallery */
