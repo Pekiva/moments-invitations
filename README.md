@@ -44,7 +44,7 @@ Danach `http://localhost:3000` öffnen. Für die Galerie-Funktion vorher `.env` 
 
 ## Anpassen
 
-Namen, Datum, Location und Ablauf direkt in `index.html` anpassen. Das Hochzeitsdatum für den Countdown und die RSVP-Frist stehen in `js/script.js` (`weddingDate`, `rsvpDeadline`).
+Texte, Datum, Location und Ablauf direkt in `index.html` bzw. in den drei Sprachblöcken in `js/i18n.js` anpassen. Das Eventdatum für den Countdown und die RSVP-Frist stehen in `js/script.js` (`eventDate`, `rsvpDeadline`).
 
 ## Deployment (Railway)
 

@@ -1,10 +1,10 @@
 (function () {
-  var weddingDate = new Date('2027-06-14T14:00:00');
-  var rsvpDeadline = new Date('2027-05-01T23:59:59');
+  var eventDate = new Date('2026-11-07T18:00:00');
+  var rsvpDeadline = new Date('2026-10-18T23:59:59');
 
   function updateCountdown() {
     var now = new Date();
-    var diff = Math.max(0, weddingDate - now);
+    var diff = Math.max(0, eventDate - now);
 
     setText('cd-days', Math.floor(diff / (1000 * 60 * 60 * 24)));
     setText('cd-hours', Math.floor((diff / (1000 * 60 * 60)) % 24));

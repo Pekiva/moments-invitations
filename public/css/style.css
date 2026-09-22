@@ -106,6 +106,14 @@ a { color: inherit; }
   padding: 0 4px;
 }
 
+.names-sub {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--color-accent);
+  font-size: clamp(1.3rem, 4vw, 1.9rem);
+  margin-top: -6px;
+}
+
 .date, .dresscode {
   margin-top: 12px;
   font-size: 1.05rem;
