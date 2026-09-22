@@ -21,12 +21,15 @@
   setInterval(updateCountdown, 1000);
 
   var rsvpCountdownEl = document.getElementById('rsvp-countdown');
-  if (rsvpCountdownEl) {
-    var daysLeft = Math.ceil((rsvpDeadline - new Date()) / (1000 * 60 * 60 * 24));
+  var daysLeft = Math.ceil((rsvpDeadline - new Date()) / (1000 * 60 * 60 * 24));
+
+  function renderRsvpCountdown() {
+    if (!rsvpCountdownEl) return;
     rsvpCountdownEl.textContent = daysLeft > 0
-      ? 'Noch ' + daysLeft + ' Tag' + (daysLeft === 1 ? '' : 'e') + ' Zeit für eure Zusage.'
-      : 'Die Anmeldefrist ist abgelaufen.';
+      ? window.i18n.t('rsvp_days_left')(daysLeft)
+      : window.i18n.t('rsvp_expired');
   }
+  renderRsvpCountdown();
 
   var form = document.getElementById('rsvp-form');
   var status = document.getElementById('form-status');
@@ -34,10 +37,12 @@
   if (form) {
     form.addEventListener('submit', function (event) {
       event.preventDefault();
-      status.textContent = 'Danke! Eure Rückmeldung wurde erfasst.';
+      status.textContent = window.i18n.t('form_thanks');
       form.reset();
     });
   }
+
+  document.addEventListener('languagechange', renderRsvpCountdown);
 
   var playBtn = document.getElementById('player-play');
   var seek = document.getElementById('player-seek');
@@ -66,7 +71,9 @@
           seek.max = ytPlayer.getDuration() || 0;
         },
         onStateChange: function (event) {
-          playBtn.textContent = event.data === YT.PlayerState.PLAYING ? '⏸' : '▶';
+          var playing = event.data === YT.PlayerState.PLAYING;
+          playBtn.textContent = playing ? '⏸' : '▶';
+          playBtn.setAttribute('aria-label', window.i18n.t(playing ? 'player_pause' : 'player_play'));
         },
       },
     });
@@ -121,20 +128,20 @@
         formData.append('photos', files[i]);
       }
 
-      if (galleryStatus) galleryStatus.textContent = 'Lädt hoch …';
+      if (galleryStatus) galleryStatus.textContent = window.i18n.t('gallery_uploading');
 
       fetch('/api/photos', { method: 'POST', body: formData })
         .then(function (res) { return res.json(); })
         .then(function (data) {
           if (data.error) {
-            if (galleryStatus) galleryStatus.textContent = data.error;
+            if (galleryStatus) galleryStatus.textContent = window.i18n.t('err_' + data.code) || data.error;
             return;
           }
-          if (galleryStatus) galleryStatus.textContent = 'Danke fürs Teilen!';
+          if (galleryStatus) galleryStatus.textContent = window.i18n.t('gallery_thanks');
           photoUpload.value = '';
         })
         .catch(function () {
-          if (galleryStatus) galleryStatus.textContent = 'Upload fehlgeschlagen. Bitte erneut versuchen.';
+          if (galleryStatus) galleryStatus.textContent = window.i18n.t('gallery_upload_failed');
         });
     });
   }

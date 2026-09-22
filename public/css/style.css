@@ -34,6 +34,38 @@ body {
     linear-gradient(160deg, #3a2f26, #1b1815 70%);
 }
 
+.lang-switch {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 20;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(27, 24, 21, 0.55);
+  backdrop-filter: blur(6px);
+  border-radius: 999px;
+}
+
+.lang-btn {
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.lang-btn:hover { color: #fff; }
+
+.lang-btn.active {
+  background: var(--color-accent);
+  color: #fff;
+}
+
 h1, h2, h3 {
   font-family: var(--font-display);
   font-weight: 600;

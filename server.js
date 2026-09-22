@@ -39,18 +39,18 @@ app.use(express.static(PUBLIC_DIR));
 
 app.get('/api/gallery-link', (req, res) => {
   if (!GOOGLE_DRIVE_FOLDER_ID) {
-    return res.status(503).json({ error: 'Google Drive ist noch nicht konfiguriert.' });
+    return res.status(503).json({ code: 'not_configured', error: 'Google Drive ist noch nicht konfiguriert.' });
   }
   res.json({ url: `https://drive.google.com/drive/folders/${GOOGLE_DRIVE_FOLDER_ID}` });
 });
 
 app.post('/api/photos', upload.array('photos', 10), async (req, res) => {
   if (!driveConfigured) {
-    return res.status(503).json({ error: 'Google Drive ist noch nicht konfiguriert.' });
+    return res.status(503).json({ code: 'not_configured', error: 'Google Drive ist noch nicht konfiguriert.' });
   }
 
   if (!req.files || req.files.length === 0) {
-    return res.status(400).json({ error: 'Keine Dateien empfangen.' });
+    return res.status(400).json({ code: 'no_files', error: 'Keine Dateien empfangen.' });
   }
 
   try {
@@ -82,13 +82,16 @@ app.post('/api/photos', upload.array('photos', 10), async (req, res) => {
     res.json({ uploaded: uploaded.length });
   } catch (err) {
     console.error('Fehler beim Hochladen:', err.message);
-    res.status(500).json({ error: 'Upload fehlgeschlagen.' });
+    res.status(500).json({ code: 'upload_failed', error: 'Upload fehlgeschlagen.' });
   }
 });
 
 app.use((err, req, res, next) => {
-  if (err instanceof multer.MulterError || err.message.includes('Bilddateien')) {
-    return res.status(400).json({ error: err.message });
+  if (err.message && err.message.includes('Bilddateien')) {
+    return res.status(400).json({ code: 'only_images', error: err.message });
+  }
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({ code: 'upload_failed', error: err.message });
   }
   next(err);
 });
