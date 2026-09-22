@@ -39,6 +39,24 @@ const PUBLIC_DIR = path.join(__dirname, 'public');
 const app = express();
 app.use(express.static(PUBLIC_DIR));
 
+app.get('/api/debug-env', (req, res) => {
+  function describe(value) {
+    if (!value) return null;
+    return {
+      length: value.length,
+      start: value.slice(0, 6),
+      end: value.slice(-6),
+      hasWhitespace: /^\s|\s$/.test(value),
+    };
+  }
+  res.json({
+    clientId: describe(GOOGLE_CLIENT_ID),
+    clientSecret: describe(GOOGLE_CLIENT_SECRET),
+    refreshToken: describe(GOOGLE_REFRESH_TOKEN),
+    folderId: describe(GOOGLE_DRIVE_FOLDER_ID),
+  });
+});
+
 app.get('/api/photos', async (req, res) => {
   if (!driveConfigured) {
     return res.status(503).json({ error: 'Google Drive ist noch nicht konfiguriert.' });
@@ -63,7 +81,7 @@ app.get('/api/photos', async (req, res) => {
 
     res.json({ photos });
   } catch (err) {
-    console.error('Fehler beim Laden der Galerie:', err.message);
+    console.error('Fehler beim Laden der Galerie:', err.message, JSON.stringify(err.response?.data || {}));
     res.status(500).json({ error: 'Galerie konnte nicht geladen werden.' });
   }
 });
