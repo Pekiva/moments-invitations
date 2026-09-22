@@ -234,6 +234,7 @@ a { color: inherit; }
 }
 
 /* Music player */
+.player { position: relative; }
 .player-track { margin-bottom: 16px; }
 
 .player-title {
@@ -283,28 +284,13 @@ a { color: inherit; }
   color: var(--color-muted);
 }
 
-.player-tracklist {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 20px;
-}
-
-.track-btn {
-  text-align: left;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: transparent;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--color-text);
-  cursor: pointer;
-}
-
-.track-btn.active {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+.youtube-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Gallery */

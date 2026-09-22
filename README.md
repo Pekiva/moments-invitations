@@ -53,12 +53,15 @@ Namen, Datum, Location und Ablauf direkt in `index.html` anpassen. Das Hochzeits
 3. Railway erkennt `package.json`, installiert Dependencies und startet `npm start` (→ `node server.js`) automatisch
 4. Unter Service → Variables die vier `GOOGLE_*`-Werte eintragen (siehe oben)
 
+## Musik-Player
+
+Der Player steuert ein unsichtbar eingebettetes YouTube-Video über die offizielle YouTube-IFrame-API (`public/js/script.js`, `onYouTubeIframeAPIReady`) — es wird kein Audio heruntergeladen oder aus YouTube extrahiert, das wäre urheberrechtlich problematisch. Song wechseln: in `public/index.html` Titel/Interpret anpassen und in `script.js` die `videoId` (aus der YouTube-URL, z.B. `youtu.be/`**`6_8FWYetqZs`**) austauschen.
+
 ## Assets ergänzen
 
-Diese Dateien fehlen noch und sollten vor dem Live-Gang ergänzt werden:
+Diese Datei fehlt noch und sollte vor dem Live-Gang ergänzt werden:
 
 - `assets/hero-bg.jpg` — Hintergrundfoto, läuft durch die ganze Seite (ohne Datei erscheint ein brauner Verlauf als Platzhalter)
-- `assets/audio/track-1.mp3`, `assets/audio/track-2.mp3` — Songs für den Musik-Player
 
 ## Offene Punkte
 

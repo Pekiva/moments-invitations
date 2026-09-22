@@ -39,14 +39,13 @@
     });
   }
 
-  var audio = document.getElementById('player-audio');
   var playBtn = document.getElementById('player-play');
   var seek = document.getElementById('player-seek');
   var currentEl = document.getElementById('player-current');
   var durationEl = document.getElementById('player-duration');
-  var titleEl = document.getElementById('player-title');
-  var artistEl = document.getElementById('player-artist');
-  var trackButtons = document.querySelectorAll('.track-btn');
+  var ytPlayer = null;
+  var ytReady = false;
+  var seeking = false;
 
   function formatTime(seconds) {
     if (!isFinite(seconds)) return '00:00';
@@ -55,48 +54,49 @@
     return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
   }
 
-  if (audio && playBtn) {
-    var firstTrack = trackButtons[0];
-    if (firstTrack) audio.src = firstTrack.dataset.src;
+  window.onYouTubeIframeAPIReady = function () {
+    if (!document.getElementById('youtube-player')) return;
+    ytPlayer = new YT.Player('youtube-player', {
+      videoId: '6_8FWYetqZs',
+      playerVars: { controls: 0, disablekb: 1 },
+      events: {
+        onReady: function () {
+          ytReady = true;
+          durationEl.textContent = formatTime(ytPlayer.getDuration());
+          seek.max = ytPlayer.getDuration() || 0;
+        },
+        onStateChange: function (event) {
+          playBtn.textContent = event.data === YT.PlayerState.PLAYING ? '⏸' : '▶';
+        },
+      },
+    });
+  };
 
+  if (playBtn) {
     playBtn.addEventListener('click', function () {
-      if (audio.paused) {
-        audio.play().catch(function () {
-          status && (status.textContent = '');
-        });
+      if (!ytReady) return;
+      if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+        ytPlayer.pauseVideo();
       } else {
-        audio.pause();
+        ytPlayer.playVideo();
       }
     });
+  }
 
-    audio.addEventListener('play', function () { playBtn.textContent = '⏸'; });
-    audio.addEventListener('pause', function () { playBtn.textContent = '▶'; });
-
-    audio.addEventListener('loadedmetadata', function () {
-      durationEl.textContent = formatTime(audio.duration);
-      seek.max = audio.duration || 0;
-    });
-
-    audio.addEventListener('timeupdate', function () {
-      currentEl.textContent = formatTime(audio.currentTime);
-      seek.value = audio.currentTime;
-    });
-
-    seek.addEventListener('input', function () {
-      audio.currentTime = Number(seek.value);
-    });
-
-    trackButtons.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        trackButtons.forEach(function (b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-        titleEl.textContent = btn.dataset.title;
-        artistEl.textContent = btn.dataset.artist;
-        audio.src = btn.dataset.src;
-        audio.play().catch(function () {});
-      });
+  if (seek) {
+    seek.addEventListener('input', function () { seeking = true; });
+    seek.addEventListener('change', function () {
+      if (ytReady) ytPlayer.seekTo(Number(seek.value), true);
+      seeking = false;
     });
   }
+
+  setInterval(function () {
+    if (!ytReady || seeking) return;
+    var current = ytPlayer.getCurrentTime();
+    currentEl.textContent = formatTime(current);
+    seek.value = current;
+  }, 500);
 
   var galleryStatus = document.getElementById('gallery-status');
   var photoUpload = document.getElementById('photo-upload');
