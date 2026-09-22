@@ -6,12 +6,10 @@ const { Readable } = require('stream');
 const path = require('path');
 
 const PORT = process.env.PORT || 3000;
-const {
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  GOOGLE_REFRESH_TOKEN,
-  GOOGLE_DRIVE_FOLDER_ID,
-} = process.env;
+const GOOGLE_CLIENT_ID = (process.env.GOOGLE_CLIENT_ID || '').trim();
+const GOOGLE_CLIENT_SECRET = (process.env.GOOGLE_CLIENT_SECRET || '').trim();
+const GOOGLE_REFRESH_TOKEN = (process.env.GOOGLE_REFRESH_TOKEN || '').trim();
+const GOOGLE_DRIVE_FOLDER_ID = (process.env.GOOGLE_DRIVE_FOLDER_ID || '').trim();
 
 const driveConfigured = Boolean(
   GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET && GOOGLE_REFRESH_TOKEN && GOOGLE_DRIVE_FOLDER_ID
@@ -38,24 +36,6 @@ const PUBLIC_DIR = path.join(__dirname, 'public');
 
 const app = express();
 app.use(express.static(PUBLIC_DIR));
-
-app.get('/api/debug-env', (req, res) => {
-  function describe(value) {
-    if (!value) return null;
-    return {
-      length: value.length,
-      start: value.slice(0, 6),
-      end: value.slice(-6),
-      hasWhitespace: /^\s|\s$/.test(value),
-    };
-  }
-  res.json({
-    clientId: describe(GOOGLE_CLIENT_ID),
-    clientSecret: describe(GOOGLE_CLIENT_SECRET),
-    refreshToken: describe(GOOGLE_REFRESH_TOKEN),
-    folderId: describe(GOOGLE_DRIVE_FOLDER_ID),
-  });
-});
 
 app.get('/api/photos', async (req, res) => {
   if (!driveConfigured) {
