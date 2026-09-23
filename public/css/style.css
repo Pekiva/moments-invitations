@@ -219,7 +219,8 @@ a { color: inherit; }
   color: var(--color-text);
 }
 
-.dresscode-image {
+.dresscode-image,
+.section-image {
   display: block;
   width: 100%;
   border-radius: 12px;
