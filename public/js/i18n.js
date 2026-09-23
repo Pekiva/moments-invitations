@@ -52,6 +52,7 @@
       },
       rsvp_expired: 'Rok za prijavu je istekao.',
       form_thanks: 'Hvala! Vaša potvrda je zabeležena.',
+      form_sending: 'Slanje…',
       gallery_uploading: 'Otpremanje…',
       gallery_thanks: 'Hvala na deljenju!',
       gallery_upload_failed: 'Otpremanje nije uspelo. Pokušajte ponovo.',
@@ -59,6 +60,8 @@
       err_not_configured: 'Google Drive još nije podešen.',
       err_upload_failed: 'Otpremanje nije uspelo.',
       err_only_images: 'Dozvoljene su samo slike.',
+      err_invalid_input: 'Molimo popunite obavezna polja.',
+      err_rsvp_failed: 'Slanje nije uspelo. Pokušajte ponovo.',
     },
     de: {
       page_title: 'Peki wird 30 — Geburtstagsfeier',
@@ -109,6 +112,7 @@
       },
       rsvp_expired: 'Die Anmeldefrist ist abgelaufen.',
       form_thanks: 'Danke! Eure Rückmeldung wurde erfasst.',
+      form_sending: 'Wird gesendet…',
       gallery_uploading: 'Lädt hoch …',
       gallery_thanks: 'Danke fürs Teilen!',
       gallery_upload_failed: 'Upload fehlgeschlagen. Bitte erneut versuchen.',
@@ -116,6 +120,8 @@
       err_not_configured: 'Google Drive ist noch nicht konfiguriert.',
       err_upload_failed: 'Upload fehlgeschlagen.',
       err_only_images: 'Nur Bilddateien sind erlaubt.',
+      err_invalid_input: 'Bitte füllt die Pflichtfelder aus.',
+      err_rsvp_failed: 'Senden fehlgeschlagen. Bitte erneut versuchen.',
     },
     en: {
       page_title: 'Peki Turns 30 — Birthday Party',
@@ -166,6 +172,7 @@
       },
       rsvp_expired: 'The RSVP deadline has passed.',
       form_thanks: 'Thank you! Your response has been recorded.',
+      form_sending: 'Sending…',
       gallery_uploading: 'Uploading…',
       gallery_thanks: 'Thanks for sharing!',
       gallery_upload_failed: 'Upload failed. Please try again.',
@@ -173,6 +180,8 @@
       err_not_configured: 'Google Drive is not configured yet.',
       err_upload_failed: 'Upload failed.',
       err_only_images: 'Only image files are allowed.',
+      err_invalid_input: 'Please fill in the required fields.',
+      err_rsvp_failed: 'Failed to send. Please try again.',
     },
   };
 

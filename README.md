@@ -1,6 +1,6 @@
 # Moments Invitations
 
-Einladungs-Website für Hochzeiten und besondere Anlässe. Statisches HTML/CSS/JS-Frontend mit einem kleinen Node/Express-Server für die Gäste-Fotogalerie (Upload + Anzeige über Google Drive).
+Einladungs-Website für Hochzeiten und besondere Anlässe. Statisches HTML/CSS/JS-Frontend mit einem kleinen Node/Express-Server für die Gäste-Fotogalerie (Upload + Anzeige über Google Drive) und die RSVP-Speicherung (Google Sheets).
 
 Aufbau angelehnt an klassische Einladungs-Seiten wie [smartpozivnice.com](https://smartpozivnice.com): durchgehendes Foto im Hintergrund, Hero mit Namen in Schreibschrift, persönliche Nachricht, Event-Details mit Kartenlink, Live-Countdown, Musik-Player, Foto-Galerie mit Lightbox und RSVP-Formular mit Anmeldefrist.
 
@@ -10,7 +10,7 @@ Aufbau angelehnt an klassische Einladungs-Seiten wie [smartpozivnice.com](https:
 - `public/css/style.css` — Styling (durchgehendes Hintergrundfoto, Karten-Layout, Dark-Mode-fähige Farben)
 - `public/js/script.js` — Countdown, RSVP-Anmeldefrist, Musik-Player-Steuerung, Foto-Upload
 - `public/assets/` — Ablage für Hintergrundfoto und Musik (siehe unten)
-- `server.js` — Express-Server: liefert `public/` aus, nimmt Uploads über `/api/photos` (POST) entgegen und liefert über `/api/gallery-link` (GET) den Link zum Drive-Ordner. Nur `public/` ist öffentlich erreichbar — `server.js`, `.env` etc. bleiben unzugänglich.
+- `server.js` — Express-Server: liefert `public/` aus, nimmt Uploads über `/api/photos` (POST) entgegen, liefert über `/api/gallery-link` (GET) den Link zum Drive-Ordner und speichert RSVP-Antworten über `/api/rsvp` (POST) im Google Sheet. Nur `public/` ist öffentlich erreichbar — `server.js`, `.env` etc. bleiben unzugänglich.
 
 ## Gäste-Fotogalerie (Google Drive)
 
@@ -33,6 +33,26 @@ Unter "Momente" gibt es zwei Buttons: **"Fotos hinzufügen"** (Upload direkt von
 
 Ohne diese Variablen liefern `/api/photos` und `/api/gallery-link` einen Hinweis "Google Drive ist noch nicht konfiguriert" statt eines Fehlers — die restliche Seite funktioniert trotzdem normal.
 
+## RSVP-Speicherung (Google Sheets)
+
+Wenn ein Gast das Formular unter "Zusage" absendet, wird die Antwort als neue Zeile in ein Google Sheet geschrieben (Spalten: Name, Zusage, Anzahl Gäste, Begleitung, Nachricht, Zeitstempel). Es gibt keine eigene Datenbank — das Sheet selbst ist die Ansicht für alle Antworten.
+
+### Einmalige Einrichtung
+
+1. **Google Sheets API aktivieren**: [console.cloud.google.com](https://console.cloud.google.com) → dasselbe Projekt wie für Drive → APIs & Dienste → Bibliothek → "Google Sheets API" → Aktivieren
+2. **Scope ergänzen**: OAuth-Zustimmungsbildschirm ("Google Auth Platform") → Datenzugriff → Bereich `https://www.googleapis.com/auth/spreadsheets` hinzufügen und bestätigen. Veröffentlichungsstatus muss weiterhin **"In Produktion"** sein.
+3. **Neuen Refresh-Token holen**: [developers.google.com/oauthplayground](https://developers.google.com/oauthplayground) → Zahnrad → "Use your own OAuth credentials" mit der **bestehenden** Client-ID/Secret (dieselbe wie bei Drive) → im Scope-Feld beide Scopes eintragen:
+   ```
+   https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets
+   ```
+   → Authorize APIs → einloggen → "Exchange authorization code for tokens" → neuen Refresh-Token kopieren (ersetzt den alten)
+4. **Google Sheet anlegen**: leeres Sheet erstellen, erste Zeile als Kopfzeile (z.B. `Name, Zusage, Anzahl Gäste, Begleitung, Nachricht, Zeitstempel`), Sheet-ID aus der URL kopieren (`docs.google.com/spreadsheets/d/<ID>/edit`)
+5. **Umgebungsvariablen aktualisieren** (lokal in `.env`, auf Railway unter Service → Variables):
+   - `GOOGLE_REFRESH_TOKEN` — mit dem neuen Token (Schritt 3) überschreiben
+   - `GOOGLE_SHEET_ID` — neu hinzufügen
+
+Ohne `GOOGLE_SHEET_ID` liefert `/api/rsvp` einen Hinweis "Google Sheets ist noch nicht konfiguriert" statt eines Fehlers — das Formular funktioniert dann nur clientseitig ohne Speicherung.
+
 ## Lokal ansehen
 
 ```bash
@@ -51,7 +71,7 @@ Texte, Datum, Location und Ablauf direkt in `index.html` bzw. in den drei Sprach
 1. Auf [railway.com/new](https://railway.com/new) → "Deploy from GitHub repo"
 2. Repo `Pekiva/moments-invitations` auswählen
 3. Railway erkennt `package.json`, installiert Dependencies und startet `npm start` (→ `node server.js`) automatisch
-4. Unter Service → Variables die vier `GOOGLE_*`-Werte eintragen (siehe oben)
+4. Unter Service → Variables die `GOOGLE_*`-Werte eintragen (siehe Drive- und Sheets-Abschnitte oben)
 
 ## Musik-Player
 
@@ -67,5 +87,4 @@ Sprachumschalter oben rechts (SR/DE/EN, Serbisch als Standard). Übersetzungen l
 
 ## Offene Punkte
 
-- Das RSVP-Formular zeigt aktuell nur eine clientseitige Bestätigung an und sendet keine Daten. Für echte Zusagen muss noch ein Backend/Formular-Service (z.B. Formspree, eigene API) angebunden werden.
 - Der Foto-Upload hat keine Login-Schranke — jeder mit dem Link kann Fotos hochladen (max. 10 MB, nur Bilder, kein Löschen durch Gäste möglich). Für mehr Kontrolle könnte man z.B. eine einfache Zugangs-PIN ergänzen.

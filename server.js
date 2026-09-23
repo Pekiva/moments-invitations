@@ -10,15 +10,27 @@ const GOOGLE_CLIENT_ID = (process.env.GOOGLE_CLIENT_ID || '').trim();
 const GOOGLE_CLIENT_SECRET = (process.env.GOOGLE_CLIENT_SECRET || '').trim();
 const GOOGLE_REFRESH_TOKEN = (process.env.GOOGLE_REFRESH_TOKEN || '').trim();
 const GOOGLE_DRIVE_FOLDER_ID = (process.env.GOOGLE_DRIVE_FOLDER_ID || '').trim();
+const GOOGLE_SHEET_ID = (process.env.GOOGLE_SHEET_ID || '').trim();
 
 const driveConfigured = Boolean(
   GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET && GOOGLE_REFRESH_TOKEN && GOOGLE_DRIVE_FOLDER_ID
 );
+const sheetsConfigured = Boolean(
+  GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET && GOOGLE_REFRESH_TOKEN && GOOGLE_SHEET_ID
+);
 
-function getDriveClient() {
+function getOAuthClient() {
   const oauth2Client = new google.auth.OAuth2(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET);
   oauth2Client.setCredentials({ refresh_token: GOOGLE_REFRESH_TOKEN });
-  return google.drive({ version: 'v3', auth: oauth2Client });
+  return oauth2Client;
+}
+
+function getDriveClient() {
+  return google.drive({ version: 'v3', auth: getOAuthClient() });
+}
+
+function getSheetsClient() {
+  return google.sheets({ version: 'v4', auth: getOAuthClient() });
 }
 
 const upload = multer({
@@ -35,6 +47,7 @@ const upload = multer({
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 const app = express();
+app.use(express.json());
 app.use(express.static(PUBLIC_DIR));
 
 app.get('/api/gallery-link', (req, res) => {
@@ -86,6 +99,38 @@ app.post('/api/photos', upload.array('photos', 10), async (req, res) => {
   }
 });
 
+app.post('/api/rsvp', async (req, res) => {
+  if (!sheetsConfigured) {
+    return res.status(503).json({ code: 'not_configured', error: 'Google Sheets ist noch nicht konfiguriert.' });
+  }
+  const { name, attending, guests, guestNames, message } = req.body || {};
+  if (!name || !String(name).trim() || (attending !== 'yes' && attending !== 'no')) {
+    return res.status(400).json({ code: 'invalid_input', error: 'Ungültige Formulardaten.' });
+  }
+  try {
+    const sheets = getSheetsClient();
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: GOOGLE_SHEET_ID,
+      range: 'A:F',
+      valueInputOption: 'USER_ENTERED',
+      requestBody: {
+        values: [[
+          String(name).trim(),
+          attending,
+          attending === 'yes' ? String(guests ?? '0') : '',
+          guestNames ? String(guestNames).trim() : '',
+          message ? String(message).trim() : '',
+          new Date().toISOString(),
+        ]],
+      },
+    });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('Fehler beim Speichern der RSVP:', err.message);
+    res.status(500).json({ code: 'rsvp_failed', error: 'Speichern fehlgeschlagen.' });
+  }
+});
+
 app.use((err, req, res, next) => {
   if (err.message && err.message.includes('Bilddateien')) {
     return res.status(400).json({ code: 'only_images', error: err.message });
@@ -101,5 +146,8 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server läuft auf Port ${PORT}${driveConfigured ? '' : ' (Google Drive noch NICHT konfiguriert)'}`);
+  const hints = [];
+  if (!driveConfigured) hints.push('Google Drive noch NICHT konfiguriert');
+  if (!sheetsConfigured) hints.push('Google Sheets noch NICHT konfiguriert');
+  console.log(`Server läuft auf Port ${PORT}${hints.length ? ' (' + hints.join(', ') + ')' : ''}`);
 });

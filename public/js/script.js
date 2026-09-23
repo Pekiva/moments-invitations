@@ -54,8 +54,34 @@
   if (form) {
     form.addEventListener('submit', function (event) {
       event.preventDefault();
-      status.textContent = window.i18n.t('form_thanks');
-      form.reset();
+      var formData = new FormData(form);
+      var payload = {
+        name: formData.get('name'),
+        attending: formData.get('attending'),
+        guests: formData.get('guests'),
+        guestNames: formData.get('guest-names'),
+        message: formData.get('message'),
+      };
+
+      status.textContent = window.i18n.t('form_sending');
+
+      fetch('/api/rsvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+        .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
+        .then(function (result) {
+          if (!result.ok) {
+            status.textContent = window.i18n.t('err_' + result.data.code) || result.data.error;
+            return;
+          }
+          status.textContent = window.i18n.t('form_thanks');
+          form.reset();
+        })
+        .catch(function () {
+          status.textContent = window.i18n.t('err_rsvp_failed');
+        });
     });
   }
 
