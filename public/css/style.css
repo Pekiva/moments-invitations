@@ -5,7 +5,7 @@
   --card-bg: rgba(255, 255, 255, 0.92);
   --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   --font-display: 'Cormorant Garamond', serif;
-  --font-script: 'Sacramento', cursive;
+  --font-script: 'Luckiest Guy', cursive;
   --font-body: 'Jost', sans-serif;
   --content-width: 560px;
 }
@@ -97,8 +97,10 @@ a { color: inherit; }
 .names {
   font-family: var(--font-script);
   font-weight: 400;
-  font-size: clamp(4.5rem, 20vw, 8rem);
+  font-size: clamp(3.6rem, 16vw, 6.5rem);
   line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
 }
 
 .names .amp {
