@@ -4,6 +4,18 @@
   }
   window.scrollTo(0, 0);
 
+  var envelopeGate = document.getElementById('envelope-gate');
+  if (envelopeGate) {
+    document.documentElement.style.overflow = 'hidden';
+    envelopeGate.addEventListener('click', function () {
+      envelopeGate.classList.add('opening');
+      document.documentElement.style.overflow = '';
+      setTimeout(function () {
+        envelopeGate.hidden = true;
+      }, 500);
+    }, { once: true });
+  }
+
   var eventDate = new Date('2026-11-07T18:00:00');
   var rsvpDeadline = new Date('2026-10-18T23:59:59');
 

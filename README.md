@@ -57,6 +57,10 @@ Texte, Datum, Location und Ablauf direkt in `index.html` bzw. in den drei Sprach
 
 Der Player zeigt ein eingebettetes YouTube-Video (16:9) und steuert es über die offizielle YouTube-IFrame-API (`public/js/script.js`, `onYouTubeIframeAPIReady`) — es wird kein Audio heruntergeladen oder aus YouTube extrahiert, das wäre urheberrechtlich problematisch. Song wechseln: in `public/index.html` Titel/Interpret anpassen und in `script.js` die `videoId` (aus der YouTube-URL, z.B. `youtu.be/`**`6_8FWYetqZs`**) austauschen.
 
+## Umschlag-Startbildschirm
+
+Vor der eigentlichen Seite liegt ein Vollbild-Overlay (`#envelope-gate` in `index.html`) mit einem per CSS gezeichneten Umschlag (kein Bild). Ein Klick blendet es aus (`public/js/script.js`) und gibt die Seite darunter frei. Der Sprachschalter bleibt auch auf diesem Bildschirm bedienbar.
+
 ## Mehrsprachigkeit
 
 Sprachumschalter oben rechts (SR/DE/EN, Serbisch als Standard). Übersetzungen liegen komplett in `public/js/i18n.js` (`translations`-Objekt). Neue Texte: im HTML `data-i18n="key"` (für reinen Text) oder `data-i18n-html="key"` (wenn HTML wie `<strong>` enthalten ist) setzen und denselben `key` in allen drei Sprachblöcken in `i18n.js` ergänzen. Die gewählte Sprache wird in `localStorage` gemerkt.
