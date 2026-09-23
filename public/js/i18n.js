@@ -6,7 +6,6 @@
     sr: {
       page_title: 'Peki slavi 30. rođendan',
       page_description: 'Pozivnica za 30. rođendan — pridružite se proslavi!',
-      eyebrow: '30. rođendan',
       turns30: 'puni 30',
       date_text: '07. novembar 2026. · 18:00',
       dresscode: 'Dress code: stil 90-ih',
@@ -63,7 +62,6 @@
     de: {
       page_title: 'Peki wird 30 — Geburtstagsfeier',
       page_description: 'Einladung zum 30. Geburtstag — feiert mit!',
-      eyebrow: '30. Geburtstag',
       turns30: 'wird 30',
       date_text: '07. November 2026 · 18:00 Uhr',
       dresscode: 'Dresscode: 90er-Jahre',
@@ -120,7 +118,6 @@
     en: {
       page_title: 'Peki Turns 30 — Birthday Party',
       page_description: 'Invitation to a 30th birthday celebration — join the party!',
-      eyebrow: '30th Birthday',
       turns30: 'turns 30',
       date_text: 'November 7, 2026 · 6:00 PM',
       dresscode: 'Dress code: 90s theme',
