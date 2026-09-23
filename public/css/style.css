@@ -443,6 +443,13 @@ a { color: inherit; }
   font-size: 0.85rem;
 }
 
+.footer-logo {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto 16px;
+}
+
 .site-footer a {
   text-decoration: underline;
 }
