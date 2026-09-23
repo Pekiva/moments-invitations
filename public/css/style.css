@@ -5,7 +5,7 @@
   --card-bg: rgba(255, 255, 255, 0.92);
   --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   --font-display: 'Cormorant Garamond', serif;
-  --font-script: 'Luckiest Guy', cursive;
+  --font-script: 'Azeret Mono', monospace;
   --font-body: 'Jost', sans-serif;
   --content-width: 560px;
 }
@@ -89,15 +89,15 @@ a { color: inherit; }
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  font-size: 1.05rem;
+  font-size: 1.12rem;
   color: rgba(255, 255, 255, 0.85);
   margin-bottom: 10px;
 }
 
 .names {
   font-family: var(--font-script);
-  font-weight: 400;
-  font-size: clamp(3.6rem, 16vw, 6.5rem);
+  font-weight: 700;
+  font-size: clamp(3.85rem, 17.1vw, 6.96rem);
   line-height: 1.1;
   letter-spacing: 0.02em;
   text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
@@ -112,20 +112,20 @@ a { color: inherit; }
   font-family: var(--font-display);
   font-style: italic;
   color: var(--color-accent);
-  font-size: clamp(1.7rem, 5vw, 2.4rem);
+  font-size: clamp(1.82rem, 5.35vw, 2.57rem);
   margin-top: -4px;
 }
 
 .date, .dresscode {
   margin-top: 14px;
-  font-size: 1.3rem;
+  font-size: 1.39rem;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.04em;
 }
 
 .dresscode {
   text-transform: uppercase;
-  font-size: 1.05rem;
+  font-size: 1.12rem;
 }
 
 .btn {
@@ -144,6 +144,11 @@ a { color: inherit; }
 }
 
 .btn:hover { opacity: 0.85; }
+
+.hero .btn {
+  padding: 17px 39px;
+  font-size: 1.18rem;
+}
 
 .site-nav {
   position: sticky;
