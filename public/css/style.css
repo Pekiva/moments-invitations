@@ -5,7 +5,7 @@
   --card-bg: rgba(255, 255, 255, 0.92);
   --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   --font-display: 'Cormorant Garamond', serif;
-  --font-script: 'Mrs Saint Delafield', cursive;
+  --font-script: 'Sacramento', cursive;
   --font-body: 'Jost', sans-serif;
   --content-width: 560px;
 }
@@ -29,7 +29,7 @@ body {
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(180deg, rgba(20, 17, 14, 0.55), rgba(20, 17, 14, 0.75)),
+    linear-gradient(180deg, rgba(20, 17, 14, 0.62), rgba(20, 17, 14, 0.68)),
     url('../assets/hero-bg.jpg') center/cover no-repeat,
     linear-gradient(160deg, #3a2f26, #1b1815 70%);
 }
@@ -89,16 +89,16 @@ a { color: inherit; }
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.75);
-  margin-bottom: 8px;
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 10px;
 }
 
 .names {
   font-family: var(--font-script);
   font-weight: 400;
-  font-size: clamp(3.2rem, 12vw, 5.5rem);
-  line-height: 1.15;
+  font-size: clamp(4.5rem, 20vw, 8rem);
+  line-height: 1.1;
 }
 
 .names .amp {
@@ -110,33 +110,33 @@ a { color: inherit; }
   font-family: var(--font-display);
   font-style: italic;
   color: var(--color-accent);
-  font-size: clamp(1.3rem, 4vw, 1.9rem);
-  margin-top: -6px;
+  font-size: clamp(1.7rem, 5vw, 2.4rem);
+  margin-top: -4px;
 }
 
 .date, .dresscode {
-  margin-top: 12px;
-  font-size: 1.05rem;
-  color: rgba(255, 255, 255, 0.85);
+  margin-top: 14px;
+  font-size: 1.3rem;
+  color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.04em;
 }
 
 .dresscode {
   text-transform: uppercase;
-  font-size: 0.85rem;
+  font-size: 1.05rem;
 }
 
 .btn {
   display: inline-block;
   margin-top: 32px;
-  padding: 14px 32px;
+  padding: 16px 36px;
   background: var(--color-accent);
   color: #fff;
   text-decoration: none;
   border: none;
   border-radius: 999px;
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: opacity 0.2s ease;
 }

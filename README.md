@@ -61,12 +61,6 @@ Der Player zeigt ein eingebettetes YouTube-Video (16:9) und steuert es über die
 
 Sprachumschalter oben rechts (SR/DE/EN, Serbisch als Standard). Übersetzungen liegen komplett in `public/js/i18n.js` (`translations`-Objekt). Neue Texte: im HTML `data-i18n="key"` (für reinen Text) oder `data-i18n-html="key"` (wenn HTML wie `<strong>` enthalten ist) setzen und denselben `key` in allen drei Sprachblöcken in `i18n.js` ergänzen. Die gewählte Sprache wird in `localStorage` gemerkt.
 
-## Assets ergänzen
-
-Diese Datei fehlt noch und sollte vor dem Live-Gang ergänzt werden:
-
-- `assets/hero-bg.jpg` — Hintergrundfoto, läuft durch die ganze Seite (ohne Datei erscheint ein brauner Verlauf als Platzhalter)
-
 ## Offene Punkte
 
 - Das RSVP-Formular zeigt aktuell nur eine clientseitige Bestätigung an und sendet keine Daten. Für echte Zusagen muss noch ein Backend/Formular-Service (z.B. Formspree, eigene API) angebunden werden.
