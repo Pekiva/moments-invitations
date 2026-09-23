@@ -122,6 +122,21 @@
     seek.value = current;
   }, 500);
 
+  var musicSection = document.getElementById('music');
+  if (musicSection && 'IntersectionObserver' in window) {
+    var autoplayTriggered = false;
+    var musicObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting && !autoplayTriggered && ytReady) {
+          autoplayTriggered = true;
+          ytPlayer.playVideo();
+          musicObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.6 });
+    musicObserver.observe(musicSection);
+  }
+
   var galleryStatus = document.getElementById('gallery-status');
   var photoUpload = document.getElementById('photo-upload');
   var galleryLink = document.getElementById('gallery-link');
