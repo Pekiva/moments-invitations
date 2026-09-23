@@ -46,7 +46,7 @@ Wenn ein Gast das Formular unter "Zusage" absendet, wird die Antwort als neue Ze
    https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets
    ```
    → Authorize APIs → einloggen → "Exchange authorization code for tokens" → neuen Refresh-Token kopieren (ersetzt den alten)
-4. **Google Sheet anlegen**: leeres Sheet erstellen, erste Zeile als Kopfzeile (z.B. `Name, Zusage, Anzahl Gäste, Begleitung, Nachricht, Zeitstempel`), Sheet-ID aus der URL kopieren (`docs.google.com/spreadsheets/d/<ID>/edit`)
+4. **Google Sheet anlegen**: **"Leer"** wählen (keine Vorlage aus der Galerie — Vorlagen mit "intelligenten Tabellen"/Smart-Table-Feature legen tausende vorformatierte Platzhalterzeilen an, wodurch neue Zeilen weit unten landen), erste Zeile als Kopfzeile eintippen (z.B. `Name, Zusage, Anzahl Gäste, Begleitung, Nachricht, Zeitstempel`), Sheet-ID aus der URL kopieren (`docs.google.com/spreadsheets/d/<ID>/edit`). Falls mehrere Tabellenblätter (Reiter) existieren, muss das mit der Kopfzeile das **erste** (linkeste) sein — `/api/rsvp` schreibt immer dorthin.
 5. **Umgebungsvariablen aktualisieren** (lokal in `.env`, auf Railway unter Service → Variables):
    - `GOOGLE_REFRESH_TOKEN` — mit dem neuen Token (Schritt 3) überschreiben
    - `GOOGLE_SHEET_ID` — neu hinzufügen
