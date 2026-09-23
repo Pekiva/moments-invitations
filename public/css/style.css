@@ -29,7 +29,7 @@ body {
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(180deg, rgba(20, 17, 14, 0.62), rgba(20, 17, 14, 0.68)),
+    linear-gradient(180deg, rgba(20, 17, 14, 0.72), rgba(20, 17, 14, 0.78)),
     url('../assets/hero-bg.jpg') center/cover no-repeat,
     linear-gradient(160deg, #3a2f26, #1b1815 70%);
 }
