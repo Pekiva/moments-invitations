@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="sr">
 <head>
+  <script>
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-i18n="page_title">Peki slavi 30. rođendan</title>

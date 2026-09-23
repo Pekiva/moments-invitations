@@ -1,4 +1,9 @@
 (function () {
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.scrollTo(0, 0);
+
   var eventDate = new Date('2026-11-07T18:00:00');
   var rsvpDeadline = new Date('2026-10-18T23:59:59');
 
