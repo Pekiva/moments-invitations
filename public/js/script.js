@@ -106,7 +106,7 @@
     if (!document.getElementById('youtube-player')) return;
     ytPlayer = new YT.Player('youtube-player', {
       videoId: '6_8FWYetqZs',
-      playerVars: { controls: 0, disablekb: 1 },
+      playerVars: { controls: 0, disablekb: 1, playsinline: 1 },
       events: {
         onReady: function () {
           ytReady = true;
@@ -124,7 +124,10 @@
 
   if (playBtn) {
     playBtn.addEventListener('click', function () {
-      if (!ytReady) return;
+      if (!ytReady) {
+        window.open('https://youtu.be/6_8FWYetqZs', '_blank', 'noopener');
+        return;
+      }
       if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
         ytPlayer.pauseVideo();
       } else {
