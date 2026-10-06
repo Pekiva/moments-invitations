@@ -77,7 +77,12 @@
             return;
           }
           status.textContent = window.i18n.t('form_thanks');
+          try {
+            window.sessionStorage.setItem('rsvp-name', String(payload.name).trim());
+            window.sessionStorage.setItem('rsvp-attending', payload.attending);
+          } catch (e) {}
           form.reset();
+          window.location.href = 'danke.html';
         })
         .catch(function () {
           status.textContent = window.i18n.t('err_rsvp_failed');

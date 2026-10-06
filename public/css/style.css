@@ -537,6 +537,39 @@ a { color: inherit; }
   text-decoration: underline;
 }
 
+.thanks {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+.thanks-card { width: 100%; }
+
+.thanks-emoji {
+  font-size: 3rem;
+  margin: 0 0 12px;
+}
+
+.thanks-title {
+  font-size: clamp(1.9rem, 6vw, 2.6rem);
+  color: var(--color-accent);
+  margin-bottom: 16px;
+}
+
+.thanks-text {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.3rem;
+  margin: 0 0 16px;
+}
+
+.thanks-details {
+  color: var(--color-muted);
+  margin: 0 0 8px;
+}
+
 @media (max-width: 480px) {
   .card { margin: 24px 16px; padding: 32px 24px; }
 }
