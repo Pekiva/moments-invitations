@@ -2,7 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const { google } = require('googleapis');
-const { Readable } = require('stream');
+const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
 const PORT = process.env.PORT || 3000;
@@ -33,16 +34,25 @@ function getSheetsClient() {
   return google.sheets({ version: 'v4', auth: getOAuthClient() });
 }
 
+const MAX_UPLOAD_BYTES = 200 * 1024 * 1024;
+
+// Disk storage so large videos are streamed to Drive instead of held in RAM.
 const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024, files: 10 },
+  storage: multer.diskStorage({ destination: os.tmpdir() }),
+  limits: { fileSize: MAX_UPLOAD_BYTES, files: 10 },
   fileFilter: (req, file, cb) => {
-    if (!file.mimetype.startsWith('image/')) {
-      return cb(new Error('Nur Bilddateien sind erlaubt.'));
+    if (!file.mimetype.startsWith('image/') && !file.mimetype.startsWith('video/')) {
+      return cb(new Error('Nur Fotos und Videos sind erlaubt.'));
     }
     cb(null, true);
   },
 });
+
+function removeTempFiles(files) {
+  (files || []).forEach((file) => {
+    fs.unlink(file.path, () => {});
+  });
+}
 
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
@@ -58,6 +68,8 @@ app.get('/api/gallery-link', (req, res) => {
 });
 
 app.post('/api/photos', upload.array('photos', 10), async (req, res) => {
+  res.on('close', () => removeTempFiles(req.files));
+
   if (!driveConfigured) {
     return res.status(503).json({ code: 'not_configured', error: 'Google Drive ist noch nicht konfiguriert.' });
   }
@@ -78,7 +90,7 @@ app.post('/api/photos', upload.array('photos', 10), async (req, res) => {
           },
           media: {
             mimeType: file.mimetype,
-            body: Readable.from(file.buffer),
+            body: fs.createReadStream(file.path),
           },
           fields: 'id',
         });
@@ -132,8 +144,11 @@ app.post('/api/rsvp', async (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  if (err.message && err.message.includes('Bilddateien')) {
+  if (err.message && err.message.includes('Fotos und Videos')) {
     return res.status(400).json({ code: 'only_images', error: err.message });
+  }
+  if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(413).json({ code: 'too_large', error: 'Datei ist zu groß (max. 200 MB).' });
   }
   if (err instanceof multer.MulterError) {
     return res.status(400).json({ code: 'upload_failed', error: err.message });

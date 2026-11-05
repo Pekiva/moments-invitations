@@ -8,13 +8,15 @@ Aufbau angelehnt an klassische Einladungs-Seiten wie [smartpozivnice.com](https:
 
 - `public/index.html` — Hero, persönliche Nachricht, Location, Ablauf, Countdown, Musik-Player, Galerie, RSVP
 - `public/css/style.css` — Styling (durchgehendes Hintergrundfoto, Karten-Layout, Dark-Mode-fähige Farben)
-- `public/js/script.js` — Countdown, RSVP-Anmeldefrist, Musik-Player-Steuerung, Foto-Upload
+- `public/js/script.js` — Countdown, RSVP-Anmeldefrist, Musik-Player-Steuerung
+- `public/js/upload.js` — Foto-/Video-Upload mit Fortschritt (genutzt von `index.html` und `fotos.html`)
+- `public/fotos.html` — eigenständige Foto-Seite, auf die der QR-Code zeigt
 - `public/assets/` — Ablage für Hintergrundfoto und Musik (siehe unten)
 - `server.js` — Express-Server: liefert `public/` aus, nimmt Uploads über `/api/photos` (POST) entgegen, liefert über `/api/gallery-link` (GET) den Link zum Drive-Ordner und speichert RSVP-Antworten über `/api/rsvp` (POST) im Google Sheet. Nur `public/` ist öffentlich erreichbar — `server.js`, `.env` etc. bleiben unzugänglich.
 
 ## Gäste-Fotogalerie (Google Drive)
 
-Unter "Momente" gibt es zwei Buttons: **"Fotos hinzufügen"** (Upload direkt von der Seite) und **"Galerie ansehen"** (öffnet den Google-Drive-Ordner in einem neuen Tab, wo alle hochgeladenen Fotos liegen). Es gibt keine eingebettete Foto-Anzeige auf der Seite selbst — die Ansicht läuft komplett über Drive.
+Unter "Momente" gibt es zwei Buttons: **"Fotos & Videos hinzufügen"** (Upload direkt von der Seite, Fotos und Videos bis 200 MB pro Datei, mit Fortschrittsanzeige; Dateien werden über die Festplatte des Servers an Drive gestreamt, nicht im Arbeitsspeicher gehalten) und **"Galerie ansehen"** (öffnet den Google-Drive-Ordner in einem neuen Tab, wo alle hochgeladenen Fotos liegen). Es gibt keine eingebettete Foto-Anzeige auf der Seite selbst — die Ansicht läuft komplett über Drive.
 
 **Wichtig:** Damit Gäste den Ordner ohne eigenen Google-Login öffnen können, muss der Drive-Ordner auf **"Jeder mit dem Link" → "Betrachter"** freigegeben sein (Rechtsklick auf den Ordner in Drive → Teilen → Allgemeiner Zugriff → "Jeder mit dem Link").
 
@@ -87,4 +89,4 @@ Sprachumschalter oben rechts (SR/DE/EN, Serbisch als Standard). Übersetzungen l
 
 ## Offene Punkte
 
-- Der Foto-Upload hat keine Login-Schranke — jeder mit dem Link kann Fotos hochladen (max. 10 MB, nur Bilder, kein Löschen durch Gäste möglich). Für mehr Kontrolle könnte man z.B. eine einfache Zugangs-PIN ergänzen.
+- Der Foto-Upload hat keine Login-Schranke — jeder mit dem Link kann Fotos hochladen (max. 200 MB pro Datei, nur Fotos und Videos, kein Löschen durch Gäste möglich). Für mehr Kontrolle könnte man z.B. eine einfache Zugangs-PIN ergänzen.
