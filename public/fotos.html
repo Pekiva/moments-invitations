@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Peki slavi 30. rođendan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Azeret+Mono:wght@500;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="bg-photo" aria-hidden="true"></div>
+
+  <div class="lang-switch" id="lang-switch">
+    <button type="button" class="lang-btn" data-lang="sr">SRB</button>
+    <button type="button" class="lang-btn" data-lang="de">DE</button>
+    <button type="button" class="lang-btn" data-lang="en">EN</button>
+  </div>
+
+  <main class="thanks">
+    <section class="card thanks-card" id="gallery">
+      <h1 class="names photos-names">Peki 30</h1>
+      <h2 data-i18n="nav_gallery">Trenuci</h2>
+      <p class="gallery-intro" data-i18n="gallery_intro">Podelite sa mnom svoje najlepše trenutke sa slavlja!</p>
+      <div class="gallery-actions">
+        <label for="photo-upload" class="btn btn-outline" data-i18n="btn_upload">Dodaj fotografije</label>
+        <input type="file" id="photo-upload" accept="image/*" multiple hidden>
+        <a href="#" id="gallery-link" class="btn btn-outline" target="_blank" rel="noopener" data-i18n="btn_gallery">Pogledaj galeriju</a>
+      </div>
+      <p class="gallery-status" id="gallery-status" role="status"></p>
+    </section>
+  </main>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/fotos.js"></script>
+</body>
+</html>
